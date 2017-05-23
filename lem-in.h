@@ -22,4 +22,23 @@ typedef struct		s_map
 	int		size;
 }					t_map;
 
+typedef struct		s_room
+{
+	char	*name;
+	char	*comment;
+	int		ant;
+	int		start;
+	int		end;
+	int		cmd;
+	int 	com;
+	int		*links;
+
+}					t_room;
+
+int	g_start;
+int	g_end;
+int	g_rooms;
+int	g_links;
+int	g_hash;
+
 #endif

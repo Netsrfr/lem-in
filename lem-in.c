@@ -339,7 +339,11 @@ void	ft_free_map(t_map map)
 	ft_printf("%d\n", g_ants);
 	while (i < map.size)
 	{
-		ft_printf("%s\n", map.map[i]);
+		if (map.map[i][0] != '#')
+			ft_printf("%s\n", map.map[i]);
+		else if (ft_strcmp(map.map[i], "##start") == 0 ||
+				ft_strcmp(map.map[i], "##end") == 0)
+			ft_printf("%s\n", map.map[i]);
 		free(map.map[i]);
 		i++;
 	}
@@ -415,13 +419,40 @@ void	ft_link(t_room *room, t_room **rooms, t_link *links)
 			ft_link(room->links[i], rooms, links);
 		i++;
 	}
+	i = 0;
+//	while (i < room->link_r)
+//	{
+//		if (room->links_r[i]->link_r == 0)
+//			ft_link(room->links_r[i], rooms, links);
+//		i++;
+//	}
+}
+
+int		ft_find_path_r(t_room *room)
+{
+	int		i;
+	int		flag;
+
+	i = 0;
+	flag = 0;
+	while (i < room->link)
+	{
+		if(room->path == 0 && room->links[i]->path == 1)
+		{
+			room->path = 1;
+			room->dist = room->links[i]->dist + 1;
+			flag = 1;
+		}
+		i++;
+	}
+	return (flag);
 }
 
 void	ft_find_path(t_room *room)
 {
 	t_room	*path;
 	int		i;
-
+	printf("TEST\n");
 	i = 0;
 	path = ft_memalloc(sizeof(t_room));
 	path->dist = room->dist;
@@ -429,7 +460,7 @@ void	ft_find_path(t_room *room)
 	{
 		if(room->links_r[i]->dist < path->dist)
 		{
-			free(path);
+			//free(path);
 			path = room->links_r[i];
 		}
 		i++;
@@ -437,34 +468,130 @@ void	ft_find_path(t_room *room)
 	path->path = 1;
 	if (room->dist > 1)
 		ft_find_path(path);
+
 }
+
+void	ft_calculate_r(t_room *rooms)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	j = 0;
+	while (j < g_rooms)
+	{
+		while (i < rooms[j].link_r)
+		{
+			if (rooms[j].links_r[i]->dist != 0)
+			{
+				if (rooms[j].dist == 0)
+				{
+					rooms[j].dist = rooms[j].links_r[i]->dist + 1;
+					i = 0;
+				}
+			}
+			i++;
+		}
+		j++;
+	}
+}
+
+//void	ft_calculate_r(t_room *room, int distance)
+//{
+//	int	i;
+//
+//	i = 0;
+//	room->dist = distance;
+//	while (i < room->link_r)
+//	{
+//		if (room->links_r[i]->dist == 0 && room->links_r[i]->end == 0)
+//			ft_calculate_r(room->links[i], distance + 1);
+//		i++;
+//	}
+//}
+
+//void	ft_calculate(t_room *room, int distance)
+//{
+//	int	i;
+//
+//	i = 0;
+//	room->dist = distance;
+//	while (i < room->link)
+//	{
+//		if (room->links[i]->dist == 0)
+//			ft_calculate(room->links[i], distance + 1);
+//		i++;
+//	}
+//	i = 0;
+//	distance = 0;
+//	while (i < room->link_r)
+//	{
+//		if (room->links_r[i]->dist == 0)
+//			ft_calculate(room->links_r[i], distance + 1);
+//		i++;
+//	}
+//}
 
 void	ft_calculate(t_room *room, int distance)
 {
 	int	i;
-	int	j;
 
 	i = 0;
 	room->dist = distance;
 	while (i < room->link)
 	{
 		if (room->links[i]->dist == 0)
-		ft_calculate(room->links[i], distance + 1);
+			ft_calculate(room->links[i], distance + 1);
 		i++;
 	}
+	i = 0;
+	distance = 0;
+	while (i < room->link_r)
+	{
+		if (room->links_r[i]->dist == 0)
+			ft_calculate(room->links_r[i], distance + 1);
+		i++;
+	}
+}
+
+void	ft_direct(t_room *rooms)
+{
+	int	end;
+	int	i;
+
+	end = 0;
+	i = 0;
+	while (rooms[end].start == 0)
+		end++;
+	while (i++ < g_ants)
+		ft_printf("L%d-%s ", i, rooms[end].name);
+	ft_printf("\n");
+	exit(0);
 }
 
 void	ft_check_path(t_room *rooms)
 {
 	int i;
+	printf("TEST\n");
 
 	i = 0;
 	while (rooms[i].start == 0)
 		i++;
 	if (rooms[i].dist == 0)
 		ft_print_error("no path available from start to end");
+	if (rooms[i].dist == 1)
+		ft_direct(rooms);
 	rooms[i].path = 1;
+	printf("TEST\n");
+
 	ft_find_path(&rooms[i]);
+	i = 0;
+//	while (i < g_rooms)
+//	{
+//		if (ft_find_path_r(&rooms[i]))
+//			i = 0;
+//		i++;
+//	}
 }
 
 void	ft_solve(t_room *rm, t_room *end)
@@ -499,12 +626,16 @@ void	ft_solve(t_room *rm, t_room *end)
 void	ft_generate_farm(t_room *rooms, t_link *links)
 {
 	int i;
+	int j;
 
 	i = 0;
 	while (rooms[i].end == 0)
 		i++;
 	ft_link(&rooms[i], &rooms, links);
 	ft_calculate(&rooms[i], 0);
+	ft_calculate_r(rooms);
+
+//	ft_calculate_r(&rooms[i], 0);
 	ft_check_path(rooms);
 	ft_solve(&rooms[i], &rooms[i]);
 	ft_printf("\n");

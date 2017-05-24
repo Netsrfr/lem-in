@@ -35,16 +35,18 @@ typedef struct		s_room
 	int				start;
 	int				end;
 	int				link;
+	int				link_r;
 	int				dist;
+	int				path;
 	struct	s_room	**links;
+	struct	s_room	**links_r;
+
 }					t_room;
 
-
-int	g_start;
-int	g_end;
 int	g_rooms;
 int	g_links;
-int	g_hash;
+int	g_ants;
+
 
 void				ft_link(t_room *room, t_room **rooms, t_link *links);
 

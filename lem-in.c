@@ -76,7 +76,7 @@ void	MAP_TEST(t_map map)
 }
 
 
-int		ft_count_ants(t_map map)
+void		ft_count_ants(t_map map)
 {
 	int i;
 
@@ -87,7 +87,9 @@ int		ft_count_ants(t_map map)
 			ft_print_error("no ants specified or format incorrect");
 		i++;
 	}
-	return((int)ft_atoi(map.map));
+	g_ants = (int)ft_atoi(map.map);
+	if (g_ants == 0)
+		ft_print_error("no ants specified");
 }
 
 void	ft_validate_room(char *room)
@@ -134,7 +136,6 @@ void	ft_count_rooms(t_map map)
 	}
 	if (g_rooms == 0)
 		ft_print_error("invalid map: no rooms");
-	printf("rooms = %d\n", g_rooms);
 }
 
 void	ft_count_links(t_map map)
@@ -335,101 +336,201 @@ void	ft_free_map(t_map map)
 	int i;
 
 	i = 1;
+	ft_printf("%d\n", g_ants);
 	while (i < map.size)
 	{
+		ft_printf("%s\n", map.map[i]);
 		free(map.map[i]);
 		i++;
 	}
+	ft_printf("\n");
 	free(map.map);
 }
 
 t_room	*ft_create_link(t_room *rooms, char *name)
 {
-	printf("STARTCL\n");
 	int i;
 
 	i = 0;
 	while (ft_strcmp(rooms[i].name, name) != 0)
 		i++;
-	printf("i = %d\n", i);
 	return (&rooms[i]);
 }
 
 void	ft_links_per_room(t_room **room, t_link *links)
 {
-	printf("STARTLPR\n");
 	int	i;
+	int	l_flag;
+	int	r_flag;
 
 	i = 0;
+	l_flag = 0;
+	r_flag = 0;
 	if ((*room)->link != 0)
-		return ;
+		l_flag = 1;
+	if ((*room)->link_r != 0)
+		r_flag = 1;
 	while (i < g_links)
 	{
-		printf("i = %d | room = %s | name = %s | ", i, links[i].room, (*room)->name);
-		if (ft_strcmp(links[i].room, (*room)->name) == 0)
+		if (ft_strcmp(links[i].room, (*room)->name) == 0 && l_flag == 0)
 				(*room)->link++;
-		printf("link = %d\n", (*room)->link);
+		 if (ft_strcmp(links[i].link, (*room)->name) == 0 && r_flag == 0)
+			(*room)->link_r++;
 		i++;
 	}
-	(*room)->links = ft_memalloc(sizeof(t_room*) * (*room)->link);
-	printf("ENDLPR\n");
+	if (l_flag == 0)
+		(*room)->links = ft_memalloc(sizeof(t_room*) * (*room)->link);
+	if (r_flag == 0)
+		(*room)->links_r = ft_memalloc(sizeof(t_room*) * (*room)->link_r);
 }
 
 void	ft_link(t_room *room, t_room **rooms, t_link *links)
 {
 	int	i;
 	int j;
+	int	k;
 
 	j = 0;
 	i = 0;
+	k = 0;
 	ft_links_per_room(&room, links);
-	while (i < g_links && j < room->link)
+	while (i < g_links)
 	{
 		if (ft_strcmp(room->name, links[i].room) == 0)
 		{
 			room->links[j] = ft_create_link(*rooms, links[i].link);
 			j++;
 		}
+		if (ft_strcmp(room->name, links[i].link) == 0)
+		{
+			room->links_r[k] = ft_create_link(*rooms, links[i].room);
+			k++;
+		}
 		i++;
 	}
 	i = 0;
 	while (i < room->link)
 	{
-		ft_link(room->links[i], rooms, links);
+		if (room->links[i]->link == 0)
+			ft_link(room->links[i], rooms, links);
 		i++;
 	}
 }
 
-void	ft_calculate(t_room room, int distance)
+void	ft_find_path(t_room *room)
+{
+	t_room	*path;
+	int		i;
+
+	i = 0;
+	path = ft_memalloc(sizeof(t_room));
+	path->dist = room->dist;
+	while (i < room->link_r)
+	{
+		if(room->links_r[i]->dist < path->dist)
+		{
+			free(path);
+			path = room->links_r[i];
+		}
+		i++;
+	}
+	path->path = 1;
+	if (room->dist > 1)
+		ft_find_path(path);
+}
+
+void	ft_calculate(t_room *room, int distance)
 {
 	int	i;
 	int	j;
 
 	i = 0;
-	room.dist = distance;
-	printf("%s distance = %d | links = %d\n", room.name, room.dist, room.link);
-	while (i < room.link)
+	room->dist = distance;
+	while (i < room->link)
 	{
-//		printf("link[%d] = %s\n", i, (*room.links)[i].name);
-		ft_calculate((*room.links)[i], distance + 1);
+		if (room->links[i]->dist == 0)
+		ft_calculate(room->links[i], distance + 1);
 		i++;
 	}
+}
 
+void	ft_check_path(t_room *rooms)
+{
+	int i;
+
+	i = 0;
+	while (rooms[i].start == 0)
+		i++;
+	if (rooms[i].dist == 0)
+		ft_print_error("no path available from start to end");
+	rooms[i].path = 1;
+	ft_find_path(&rooms[i]);
+}
+
+void	ft_solve(t_room *rm, t_room *end)
+{
+	int	i;
+
+	i = 0;
+	while (rm->links[i]->path != 1)
+		i++;
+	if (rm->links[i]->ant == 0 && rm->ant < g_ants && rm->links[i]->start == 0)
+		ft_solve(rm->links[i], end);
+	if (rm->links[i]->ant > 0 && rm->ant < g_ants)
+	{
+		rm->ant = rm->links[i]->ant;
+		ft_printf("L%d-%s ", rm->ant, rm->name);
+		ft_solve(rm->links[i], end);
+	}
+	else if (rm->links[i]->start == 1)
+	{
+		if (rm->ant < g_ants)
+		{
+			rm->ant++;
+			ft_printf("L%d-%s ", rm->ant, rm->name);
+		}
+		printf("\n");
+		ft_solve(end, end);
+	}
+	if (rm->links[i]->start == 0 && end->ant < g_ants)
+		ft_solve(rm->links[i], end);
 }
 
 void	ft_generate_farm(t_room *rooms, t_link *links)
 {
 	int i;
-	int l;
 
 	i = 0;
-	l = 0;
 	while (rooms[i].end == 0)
 		i++;
 	ft_link(&rooms[i], &rooms, links);
-	ft_calculate(rooms[i], 0);
+	ft_calculate(&rooms[i], 0);
+	ft_check_path(rooms);
+	ft_solve(&rooms[i], &rooms[i]);
+	ft_printf("\n");
+}
 
+void	ft_free(t_room *rooms, t_link *links)
+{
+	int i;
 
+	i = 0;
+	while (i < g_rooms)
+	{
+		if (rooms[i].link != 0)
+			free(rooms[i].links);
+		free(rooms[i].name);
+	i++;
+	}
+	free(rooms);
+	i = 0;
+	while (i < g_links)
+	{
+		free(links[i].link);
+		free(links[i].room);
+		i++;
+	}
+	free(links);
 }
 
 void	ft_parse_map()
@@ -439,7 +540,6 @@ void	ft_parse_map()
 	t_link	*links;
 
 	ft_read_stdin(&map);
-	MAP_TEST(map);
 	ft_count_ants(map);
 	ft_count_rooms(map);
 	ft_count_links(map);
@@ -449,9 +549,11 @@ void	ft_parse_map()
 	rooms = ft_get_rooms(map);
 	ft_validate_rooms(rooms);
 	links = ft_get_links(map);
-	ft_free_map(map);
 	ft_validate_links(rooms, links);
+//	MAP_TEST(map);
+	ft_free_map(map);
 	ft_generate_farm(rooms, links);
+	ft_free(rooms, links);
 }
 
 int		main(int argc, char **argv)

@@ -37,6 +37,9 @@ typedef struct		s_room
 	int				link;
 	int				link_r;
 	int				dist;
+	int				dist_r;
+	int flag;
+	int flag_r;
 	int				path;
 	struct	s_room	**links;
 	struct	s_room	**links_r;
@@ -48,6 +51,9 @@ int	g_links;
 int	g_ants;
 
 
-void				ft_link(t_room *room, t_room **rooms, t_link *links);
+void				ft_link(t_room **rooms, t_link *links, int i);
+void	ft_find_path(t_room *room);
+void		ft_find_distance_r(t_room *room, int distance);
+void		ft_find_distance(t_room *room, int distance);
 
 #endif

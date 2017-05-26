@@ -37,9 +37,7 @@ typedef struct		s_room
 	int				link;
 	int				link_r;
 	int				dist;
-	int				dist_r;
-	int flag;
-	int flag_r;
+	int				flag;
 	int				path;
 	struct	s_room	**links;
 	struct	s_room	**links_r;
@@ -50,10 +48,39 @@ int	g_rooms;
 int	g_links;
 int	g_ants;
 
+/*
+** parse_map.c
+*/
+void	ft_get_map(t_map *map);
 
-void				ft_link(t_room **rooms, t_link *links, int i);
-void	ft_find_path(t_room *room);
-void		ft_find_distance_r(t_room *room, int distance);
-void		ft_find_distance(t_room *room, int distance);
+/*
+** links.c
+*/
+t_link	*ft_get_links(t_map map);
+void	ft_links_per_room(t_room **rooms, t_link *links);
+void	ft_link(t_room **rooms, t_link *links, int i);
+
+/*
+** path.c
+*/
+void	ft_find_distance(t_room *room, int distance);
+void	ft_solve(t_room *rm, t_room *end);
+void	ft_check_path(t_room *rooms);
+
+/*
+** utility.c
+*/
+void	ft_print_error(char *error);
+void	ft_free(t_room *rooms, t_link *links);
+void	ft_free_map(t_map map);
+
+
+/*
+** validation.c
+*/
+void	ft_validate_room(char *room);
+void	ft_validate_rooms(t_room *rooms);
+void	ft_validate_commands(t_map map, int i, int start, int end);
+void	ft_validate_links(t_room *rooms, t_link *links);
 
 #endif

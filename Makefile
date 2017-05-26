@@ -12,7 +12,7 @@
 
 LEMIN = lem-in
 
-C_FILES = lem-in.c
+C_FILES = lem-in.c parse_map.c validation.c links.c path.c
 
 LIBFT		=	./libft/libft.a
 PRINTF		=	./libraries/ft_printf/libftprintf.a

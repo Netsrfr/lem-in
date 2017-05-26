@@ -46,8 +46,6 @@ typedef struct		s_pf_flag
 t_flag				g_fl;
 ssize_t				g_return;
 char				*g_print;
-int					p_flag;
-
 
 ssize_t				ft_printf(const char *format, ...);
 void				flag_init(void);

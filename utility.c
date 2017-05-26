@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "lem-in.h"
+#include "lem_in.h"
 
 void	ft_print_error(char *error)
 {
@@ -20,7 +20,7 @@ void	ft_print_error(char *error)
 
 void	ft_free(t_room *rooms, t_link *links)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (i < g_rooms)
@@ -43,7 +43,7 @@ void	ft_free(t_room *rooms, t_link *links)
 
 void	ft_free_map(t_map map)
 {
-	int i;
+	int	i;
 
 	i = 1;
 	ft_printf("%d\n", g_ants);
@@ -52,7 +52,8 @@ void	ft_free_map(t_map map)
 		if (map.map[i][0] != '#')
 			ft_printf("%s\n", map.map[i]);
 		else if (ft_strcmp(map.map[i], "##start") == 0 ||
-				 ft_strcmp(map.map[i], "##end") == 0)
+				ft_strcmp(map.map[i], "##end") == 0 ||
+				ft_strcmp(map.map[i], "##collapse") == 0)
 			ft_printf("%s\n", map.map[i]);
 		free(map.map[i]);
 		i++;

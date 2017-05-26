@@ -63,9 +63,7 @@ int		ft_conversion_s(char *argument)
 	else
 		temp = ft_strdup(argument);
 	ft_putwidth_string(g_fl.width_v, &temp);
-	//free(g_print);
 	g_print = ft_strdup(temp);
-	p_flag = 1;
 	free(temp);
 	return (1);
 }

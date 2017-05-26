@@ -10,18 +10,17 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "lem-in.h"
+#include "lem_in.h"
 
-static void	ft_fill_link(char *map, t_link *link)
+static void		ft_fill_link(char *map, t_link *link)
 {
-	int i;
-	int j;
+	int	i;
+	int	j;
 
 	i = 0;
 	j = 0;
 	link->room = ft_memalloc(sizeof(char) * ft_strlen(map));
 	link->link = ft_memalloc(sizeof(char) * ft_strlen(map));
-
 	while (map[i] != '-')
 	{
 		link->room[j] = map[i];
@@ -40,7 +39,7 @@ static void	ft_fill_link(char *map, t_link *link)
 
 static t_room	*ft_create_link(t_room *rooms, char *name)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (ft_strcmp(rooms[i].name, name) != 0)
@@ -48,11 +47,11 @@ static t_room	*ft_create_link(t_room *rooms, char *name)
 	return (&rooms[i]);
 }
 
-t_link	*ft_get_links(t_map map)
+t_link			*ft_get_links(t_map map)
 {
-	int i;
-	int	j;
-	t_link *links;
+	int		i;
+	int		j;
+	t_link	*links;
 
 	i = 1;
 	j = 0;
@@ -71,7 +70,7 @@ t_link	*ft_get_links(t_map map)
 	return (links);
 }
 
-void	ft_links_per_room(t_room **rooms, t_link *links)
+void			ft_links_per_room(t_room **rooms, t_link *links)
 {
 	int	i;
 	int	j;
@@ -88,13 +87,13 @@ void	ft_links_per_room(t_room **rooms, t_link *links)
 				(*rooms)[j].link++;
 			i++;
 		}
-		if((*rooms)[j].link != 0)
+		if ((*rooms)[j].link != 0)
 			(*rooms)[j].links = ft_memalloc(sizeof(t_room*) * (*rooms)[j].link);
 		j++;
 	}
 }
 
-void	ft_link(t_room **rooms, t_link *links, int i)
+void			ft_link(t_room **rooms, t_link *links, int i)
 {
 	int	j;
 	int k;

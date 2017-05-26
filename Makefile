@@ -12,7 +12,7 @@
 
 LEMIN = lem-in
 
-C_FILES = lem-in.c parse_map.c validation.c links.c path.c
+C_FILES = lem_in.c parse_map.c validation.c links.c path.c utility.c
 
 LIBFT		=	./libft/libft.a
 PRINTF		=	./libraries/ft_printf/libftprintf.a
@@ -48,7 +48,7 @@ gnl: $(GNL)
 $(GNL):
 	@make -C ./libraries/get_next_line
 
-$(LEMIN): $(C_FILES) lem-in.h
+$(LEMIN): $(C_FILES) lem_in.h
 	@gcc $(C_FLAGS) $(LIBLINK) $(SRCS) -o lem-in
 
 test: fclean library

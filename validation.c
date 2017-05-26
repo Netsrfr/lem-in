@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   validation.c                                            :+:      :+:    :+:   */
+/*   validation.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jpfeffer <jpfeffer@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -10,14 +10,14 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "lem-in.h"
+#include "lem_in.h"
 
 void	ft_validate_room(char *room)
 {
-	int    i;
-	int    spaces;
+	int	i;
+	int	spaces;
 
-	i    = 0;
+	i = 0;
 	spaces = 0;
 	while (room[i])
 	{
@@ -29,7 +29,7 @@ void	ft_validate_room(char *room)
 		ft_print_error("rooms must have three parameters");
 	while (*room != ' ')
 		room++;
-	while(*room)
+	while (*room)
 	{
 		if (*room != ' ' && (*room < '0' || *room > '9'))
 			ft_print_error("room coordinates must be positive integer");
@@ -41,13 +41,12 @@ void	ft_validate_room(char *room)
 
 void	ft_validate_rooms(t_room *rooms)
 {
-	int i;
-	int j;
+	int	i;
+	int	j;
 
 	i = 0;
 	while (i < g_rooms)
 	{
-
 		j = i + 1;
 		while (j < g_rooms)
 		{
@@ -55,7 +54,6 @@ void	ft_validate_rooms(t_room *rooms)
 				ft_print_error("room cannot start with 'L'");
 			if (ft_strcmp(rooms[i].name, rooms[j].name) == 0)
 				ft_print_error("room duplicate provided");
-
 			j++;
 		}
 		i++;
@@ -67,13 +65,14 @@ void	ft_validate_commands(t_map map, int i, int start, int end)
 	while (i < map.size)
 	{
 		if (ft_strcmp(map.map[i], "##start") == 0 ||
-			ft_strcmp(map.map[i], "##end") == 0)
+			ft_strcmp(map.map[i], "##end") == 0 ||
+			ft_strcmp(map.map[i], "##collapse") == 0)
 		{
 			if (i == map.size - 1)
 				ft_print_error("must issue command to parameter");
 			if (map.map[i + 1][0] == '#')
 				ft_print_error("cannot issue command to a comment or command");
-			if(ft_strchr(map.map[i + 1], '-') != 0)
+			if (ft_strchr(map.map[i + 1], '-') != 0)
 				ft_print_error("must issue command to room");
 			if (ft_strcmp(map.map[i], "##start") == 0)
 				start++;
@@ -88,9 +87,9 @@ void	ft_validate_commands(t_map map, int i, int start, int end)
 
 void	ft_validate_links(t_room *rooms, t_link *links)
 {
-	int i;
-	int j;
-	int room;
+	int	i;
+	int	j;
+	int	room;
 	int	link;
 
 	i = 0;

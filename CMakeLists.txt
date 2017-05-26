@@ -85,6 +85,6 @@ set(SOURCE_FILES
         libraries/ft_printf/ft_putwidth.c
         libraries/get_next_line/get_next_line.c
         libraries/get_next_line/get_next_line.h
-        lem-in.c lem-in.h parse_map.c validation.c links.c path.c utility.c)
+        lem_in.c lem_in.h parse_map.c validation.c links.c path.c utility.c)
 
 add_executable(lem-in ${SOURCE_FILES})

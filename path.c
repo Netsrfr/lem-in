@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   path.c                                            :+:      :+:    :+:   */
+/*   path.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jpfeffer <jpfeffer@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -10,21 +10,21 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "lem-in.h"
+#include "lem_in.h"
 
 void		ft_find_distance(t_room *room, int distance)
 {
-	int i;
+	int	i;
 
 	i = 0;
-
-	if(room->dist == 0)
+	if (room->dist == 0 && room->w == 0)
 		room->dist = distance;
-	else
+	else if (room->w == 0)
 		room->dist = distance > room->dist ? room->dist : distance;
-	while(i < room->link)
+	while (i < room->link)
 	{
-		if (room->links[i]->flag == 0 && room->links[i]->end == 0)
+		if (room->w == 0 && room->links[i]->flag == 0 &&
+				room->links[i]->end == 0)
 		{
 			room->links[i]->flag = 1;
 			ft_find_distance(room->links[i], distance + 1);
@@ -37,19 +37,17 @@ static void	ft_find_path(t_room *room)
 {
 	t_room	*path;
 	int		i;
+
 	i = 0;
-	path = ft_memalloc(sizeof(t_room));
-	path->dist = room->dist;
+	path = NULL;
 	while (i < room->link)
 	{
-		if(room->links[i]->dist != 0 && room->links[i]->dist < path->dist)
-		{
-			//	free(*path);
+		if (room->links[i]->dist != 0 && room->links[i]->dist < room->dist)
 			path = room->links[i];
-		}
 		i++;
 	}
-	path->path = 1;
+	if (path)
+		path->path = 1;
 	if (room->dist > 1)
 		ft_find_path(path);
 }
@@ -61,17 +59,17 @@ static void	ft_direct(t_room *rooms)
 
 	end = 0;
 	i = 0;
-	while (rooms[end].start == 0)
+	while (rooms[end].end == 0)
 		end++;
 	while (i++ < g_ants)
-		ft_printf("L%d-%s ", i, rooms[end].name);
-	ft_printf("\n");
+		ft_printf("L%d-%s\n", i, rooms[end].name);
 	exit(0);
 }
 
-void	ft_check_path(t_room *rooms)
+void		ft_check_path(t_room *rooms)
 {
-	int i;
+	int	i;
+
 	i = 0;
 	while (rooms[i].start == 0)
 		i++;
@@ -83,7 +81,7 @@ void	ft_check_path(t_room *rooms)
 	ft_find_path(&rooms[i]);
 }
 
-void	ft_solve(t_room *rm, t_room *end)
+void		ft_solve(t_room *rm, t_room *end)
 {
 	int	i;
 

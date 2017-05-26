@@ -56,11 +56,10 @@ char	*ft_putwidth_no_p(int width, char *result)
 
 void	ft_putwidth_string(int width, char **result)
 {
-	int	strlen;
-	char *temp;
+	int		strlen;
+	char	*temp;
 
 	strlen = (int)ft_strlen(*result);
-
 	while (width > strlen && g_fl.minus == 0)
 	{
 		temp = *result;

@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parse_map.c                                            :+:      :+:    :+:   */
+/*   parse_map.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jpfeffer <jpfeffer@student.42.us.org>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "lem-in.h"
+#include "lem_in.h"
 
 static char	**ft_expand_map(char **map, int count)
 {
@@ -56,7 +56,7 @@ static void	ft_read_stdin(t_map *map, int i)
 	}
 	if (!(map->map[0]))
 		ft_print_error("invalid map: empty map");
-	while (i < ft_strlen(map->map[0]))
+	while (i < (int)ft_strlen(map->map[0]))
 	{
 		if (map->map[0][i] < '0' || map->map[0][i] > '9')
 			ft_print_error("no ants specified or format incorrect");
@@ -69,12 +69,12 @@ static void	ft_read_stdin(t_map *map, int i)
 
 static void	ft_count_rooms(t_map map)
 {
-	int i;
+	int	i;
 
 	i = 1;
 	while (i < map.size && ft_strchr(map.map[i], '-') == 0)
 	{
-		if(map.map[i][0] != '#')
+		if (map.map[i][0] != '#')
 		{
 			ft_validate_room(map.map[i]);
 			g_rooms++;
@@ -87,7 +87,7 @@ static void	ft_count_rooms(t_map map)
 
 static void	ft_count_links(t_map map)
 {
-	int i;
+	int	i;
 	int	links;
 
 	i = 1;
@@ -96,7 +96,7 @@ static void	ft_count_links(t_map map)
 	while (i < map.size)
 	{
 		links = 0;
-		while(i < map.size && map.map[i][0] == '#')
+		while (i < map.size && map.map[i][0] == '#')
 			i++;
 		if (i < map.size)
 		{
@@ -112,7 +112,7 @@ static void	ft_count_links(t_map map)
 		ft_print_error("invalid map: no tunnels");
 }
 
-void	ft_get_map(t_map *map)
+void		ft_get_map(t_map *map)
 {
 	ft_read_stdin(map, 0);
 	ft_count_rooms(*map);

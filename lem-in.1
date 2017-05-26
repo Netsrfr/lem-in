@@ -1,0 +1,122 @@
+.TH lem-in 1 "May 26, 2017" 42
+.SH NAME
+.B lem-in
+\-- generate an 'ant farm' and navigates paths to get n ants from start to
+finish
+.SH SYNOPSIS
+.B ./lem-in
+< [file]
+.br
+cat [file] |
+.B ./lem-in
+.SH DESCRIPTION
+.B lem-in
+receives and validates a formatted map on the standard input. If format criteria
+are not met
+.B lem-in
+will display an error on the standard output.
+.
+.PP
+.RE
+.RS 5
+.B Map format:
+.br
+.RS 2
+.br
+[int]                 |   [ants]
+.br
+#comment              |   #comment
+.br
+##command             |   ##command
+.br
+[char*] [int] [int]   |   [room] [x] [y]
+.br
+[char*]-[char*]       |   [room]-[room]
+.PP
+.RE
+.RS 5
+.B Map format expanded:
+.br
+.RS 2
+.br
+.B number of ants:
+[int]
+.br
+.RS 2
+ants must be a positive integer; without whitespaces preceding or following
+.br
+.RS -2
+.B rooms:
+[char*] [int] [int]
+.br
+.RS 2
+room names must be unique.
+.br
+room name must be at least one character, cannot begin with 'L' or '#', and
+cannot be preceded by whitespaces.
+.br
+room and coordinates must be separated by a single space; coordinates must be a
+positive integer
+.br
+.RS -2
+.B links:
+[char*]-[char*]
+.br
+.RS 2
+links are created by placing '-' between two room names
+.br
+linked rooms must exist and a room cannot be linked to itself
+br
+.RS -2
+.B comments:
+#comment
+.br
+.RS 2
+comments must begin with a single #
+br
+.RS -2
+.B commands:
+##command
+.RS 2
+.br
+commands must begin with "##"
+.br
+commands can only be issued to a room
+.br
+invalid commands will be ignored
+.br
+.RS -4
+.B Available commands:
+.br
+.RS 2
+.B ##start
+.br
+.B ##end
+.br
+.B ##collapse
+.PP
+.RE
+.RS -5
+.B Output:
+.RS 2
+.br
+.B lem-in
+displays the path(s) taken on a turn-by-turn basis (separated by '\\n' in the
+following format:
+.br
+.RS 2
+Lx-a Ly-b Lz-c where x, y, z represent the ants' numbers and a, b, c represent
+the rooms' names
+.sp
+.RS -2
+If the map provided adheres to format criteria however a solution is not
+possible
+.B lem-in
+will display the map contents followed by an error on the standard
+output.
+.sp
+If the map provided does not adhere to format criteria
+.B lem-in
+will display an error on the standard output
+.SH AUTHOR
+jpfeffer jpfeffer@student.42.us.org

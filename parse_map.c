@@ -62,7 +62,7 @@ static void	ft_read_stdin(t_map *map, int i)
 			ft_print_error("no ants specified or format incorrect");
 		i++;
 	}
-	g_ants = (int)ft_atoi(map->map);
+	g_ants = (int)ft_atoi((*map).map[0]);
 	if (g_ants == 0)
 		ft_print_error("no ants specified");
 }

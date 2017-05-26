@@ -59,5 +59,6 @@ void	ft_free_map(t_map map)
 		i++;
 	}
 	ft_printf("\n");
+	free(map.map[0]);
 	free(map.map);
 }

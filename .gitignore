@@ -34,3 +34,9 @@ Module.symvers
 Mkfile.old
 dkms.conf
 /cmake-build-debug/
+/._.DS_Store
+.DS_Store
+/autolemin.sh
+/lem-in
+/lem-in.dSYM/
+.idea

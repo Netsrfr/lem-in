@@ -11,9 +11,9 @@
 /* ************************************************************************** */
 
 #include "libft.h"
-#define SI(x) (**str == x)
+#define SI(x) (*str == x)
 
-long long int			ft_atoi(char **str)
+long long int			ft_atoi(char *str)
 {
 	int				neg;
 	long long int	result;
@@ -22,18 +22,18 @@ long long int			ft_atoi(char **str)
 	result = 0;
 	while (SI(' ') || SI('\t') || SI('\n') || SI('\v') || SI('\r') || SI('\f'))
 		(*str)++;
-	if (SI('-') && *(*str + 1) != '-' && *(*str + 1) != '+')
+	if (SI('-') && *(str + 1) != '-' && *(str + 1) != '+')
 	{
 		neg = -neg;
-		(*str)++;
+		str++;
 	}
-	if (SI('+') && *(*str + 1) != '+')
-		(*str)++;
-	while (**str >= '0' && **str <= '9')
+	if (SI('+') && *(str + 1) != '+')
+		str++;
+	while (*str >= '0' && *str <= '9')
 	{
 		result = result * 10;
-		result = result + (**str - 48);
-		(*str)++;
+		result = result + (*str - 48);
+		str++;
 	}
 	return (result * neg);
 }

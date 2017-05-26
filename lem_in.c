@@ -75,15 +75,13 @@ int		main(int argc, char **argv)
 	t_room	*rooms;
 	t_link	*links;
 
-	argc = 0;
-	argv = NULL;
 	ft_get_map(&map);
 	ft_validate_commands(map, 1, 0, 0);
 	rooms = ft_get_rooms(map);
 	ft_validate_rooms(rooms);
 	links = ft_get_links(map);
 	ft_validate_links(rooms, links);
-	ft_free_map(map);
+	ft_free_map(map, argc, argv);
 	ft_links_per_room(&rooms, links);
 	ft_link(&rooms, links, 0);
 	ft_generate_farm(rooms);

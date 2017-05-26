@@ -70,7 +70,7 @@ void				ft_check_path(t_room *rooms);
 */
 void				ft_print_error(char *error);
 void				ft_free(t_room *rooms, t_link *links);
-void				ft_free_map(t_map map);
+void				ft_free_map(t_map map, int argc, char **argv);
 
 /*
 ** validation.c
